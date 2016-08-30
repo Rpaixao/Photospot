@@ -8,6 +8,7 @@ import ReactNative, {
    Image,
    StyleSheet,
    TouchableOpacity,
+   TouchableHighlight,
    ListView,
    Text,
    ToolbarAndroid,
@@ -16,7 +17,7 @@ import ReactNative, {
  } from 'react-native';
 
 var ParallaxScrollView = require('react-native-parallax-scroll-view');
-
+var photoURL = "";
 
 import Dimensions from 'Dimensions';
 let windowWidth = Dimensions.get('window').width;
@@ -24,10 +25,8 @@ let windowHeight = Dimensions.get('window').heights;
 const STICKY_HEADER_HEIGHT = Platform.OS === 'ios' ? 60 : 56; ;
 let mapHeight = Dimensions.get('window').height - STICKY_HEADER_HEIGHT - 40;
 
-var DIAS = ['PROGRAMACAO'];
 var REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
 var GMAPS_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=' + windowWidth + 'x' + mapHeight + '&key=AIzaSyB3mA9yEf03lJWnmkmX4rowwWawOu6TTco&maptype=hybrid';
-//photo_id=28374402380
 
 class FestaDetail extends Component {
   constructor(props) {
@@ -67,24 +66,18 @@ class FestaDetail extends Component {
     });
   }
 
-  renderSectionHeader(data, sectionId) {
-    var text;
-    return (
-      <View backgroundColor='#DDD' style={{height: 30, alignItems:'center', flexDirection:'row' }}>
-          <Text style={{marginLeft: 5, fontWeight: 'bold', fontSize: 16}}>{DIAS[sectionId]}</Text>
-      </View>
+  renderHeader(){
+    var rowData = this.state.photoData;
+    photoURL = 'https://farm' + rowData.farm + '.staticflickr.com/' + rowData.server + '/' + rowData.id + '_' + rowData.secret + '_c.jpg';
+    return(
+        <Image source={{uri: photoURL,
+                      width: window.width,
+                      height: PARALLAX_HEADER_HEIGHT}}/>
     );
   }
 
-  renderHeader(){
-    var rowData = this.state.photoData;
-    var urlString = 'https://farm' + rowData.farm + '.staticflickr.com/' + rowData.server + '/' + rowData.id + '_' + rowData.secret + '_c.jpg';
-    console.log(urlString);
-    return(
-    <Image source={{uri: urlString,
-                    width: window.width,
-                    height: PARALLAX_HEADER_HEIGHT}}/>
-    );
+  onImagePress(){
+    this.props.navigator.push({name: 'photoview', imageUri: photoURL});
   }
 
   renderGMapsImage(){
@@ -95,9 +88,9 @@ class FestaDetail extends Component {
                         width: window.width-10,
                         height: mapHeight}}>
 
-            <TouchableOpacity onPress={() => {this.onPressDirectionsEvent(this.state.geoLocationData.latitude, this.state.geoLocationData.longitude)}} style={{alignItems: 'center', justifyContent: 'center', width: 48, height: 48, backgroundColor: 'white', borderRadius: 50, borderWidth: 1, borderColor: '#DDD', marginLeft: 10, marginTop: 10}}>
+            <TouchableHighlight underlayColor='#FFF' onPress={() => {this.onPressDirectionsEvent(this.state.geoLocationData.latitude, this.state.geoLocationData.longitude)}} style={{alignItems: 'center', justifyContent: 'center', width: 48, height: 48, backgroundColor: 'white', borderRadius: 50, borderWidth: 1, borderColor: '#DDD', marginLeft: 10, marginTop: 10}}>
              <Image source={require('./directions.png')}  style={{ width: 32, height: 32}} />
-            </TouchableOpacity>
+            </TouchableHighlight>
         </Image>
       );
   }
@@ -108,7 +101,6 @@ class FestaDetail extends Component {
 
   onPressDirectionsEvent(latitude, longitude){
     var urlString = "http://maps.google.com/maps?z=12&t=m&q=loc:" + latitude + "+" + longitude;
-    console.log(urlString);
     Linking.canOpenURL(urlString).then(supported => {
       if (!supported) {
         console.log('Can\'t handle url: ');
@@ -139,17 +131,19 @@ class FestaDetail extends Component {
   renderForegroundContent(){
       if(this.hasEnoughData()){
         return(
-          <View key="parallax-header" style={ styles.parallaxHeader }>
-            <Text style={ styles.sectionSpeakerText }>
-              { this.state.geoLocationData.locality }, {this.state.geoLocationData.county}
-            </Text>
-            <Text style={ styles.sectionTitleText }>
-              { this.state.geoLocationData.region }, { this.state.geoLocationData.country }
-            </Text>
-            <Text style={ styles.titleText }>
-              { this.state.photoData.title }
-            </Text>
-          </View>
+          <TouchableOpacity style={{height: PARALLAX_HEADER_HEIGHT}} onPress={() => {this.onImagePress()}}>
+            <View key="parallax-header" style={ styles.parallaxHeader }>
+              <Text style={ styles.sectionSpeakerText }>
+                { this.state.geoLocationData.locality }, {this.state.geoLocationData.county}
+              </Text>
+              <Text style={ styles.sectionTitleText }>
+                { this.state.geoLocationData.region }, { this.state.geoLocationData.country }
+              </Text>
+              <Text style={ styles.titleText }>
+                { this.state.photoData.title }
+              </Text>
+            </View>
+          </TouchableOpacity>
         );
       }else{
         return(
@@ -203,14 +197,14 @@ class FestaDetail extends Component {
               backgroundSpeed={10}
 
               renderBackground={() => (
-                <View key="background">
-                  { this.renderHeader() }
-                  <View style={{position: 'absolute',
-                                top: 0,
-                                width: window.width,
-                                backgroundColor: 'rgba(0,0,0,.4)',
-                                height: PARALLAX_HEADER_HEIGHT}}/>
-                </View>
+                  <View key="background">
+                      { this.renderHeader() }
+                      <View style={{position: 'absolute',
+                                    top: 0,
+                                    width: window.width,
+                                    backgroundColor: 'rgba(0,0,0,.4)',
+                                    height: PARALLAX_HEADER_HEIGHT}}/>
+                  </View>
               )}
 
               renderForeground={() => this.renderForegroundContent()}

@@ -10,7 +10,8 @@ import ReactNative, {
    ListView,
    Text,
    ToolbarAndroid,
-   ActivityIndicator
+   ActivityIndicator,
+   AsyncStorage
  } from 'react-native';
 
  var ResponsiveImage = require('react-native-responsive-image');
@@ -29,8 +30,24 @@ import ReactNative, {
 module.exports = React.createClass({
 
   getInitialState(){
+
     DATASOURCE_MANAGER = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      return {};
+      //var titleString = "" + this.props.navigator.navigationContext.currentRoute.currentLatitude + "," + this.props.navigator.navigationContext.currentRoute.currentLongitude;
+      var titleString = "Location Photos"
+      return {
+        latitude: this.props.navigator.navigationContext.currentRoute.currentLatitude,
+        longitude: this.props.navigator.navigationContext.currentRoute.currentLatitude,
+        title: titleString
+      };
+  },
+
+  componentWillMount(){
+    AsyncStorage.getItem('@FavoriteGeoLocations:total', (error, result) => {
+      if (error) {
+        return;
+      }
+      console.log(result);
+    });
   },
 
   componentDidMount(){
@@ -63,9 +80,22 @@ module.exports = React.createClass({
     },
 
     onHomePress(){
-        FESTAS = [];
-        DIAS = [];
+
         this.props.navigator.pop();
+    },
+
+    onAddFavoriteGeoLocationClick(){
+        try {
+            const value = AsyncStorage.getItem('@FavoriteGeoLocations:total');
+            console.log(value);
+            value = value + 1;
+            console.log(value);
+            AsyncStorage.setItem('@FavoriteGeoLocations:total', value);
+            AsyncStorage.setItem('@FavoriteGeoLocationsLatitude:' + value, this.props.navigator.navigationContext.currentRoute.currentLatitude);
+            AsyncStorage.setItem('@FavoriteGeoLocationsLongitude:' + value, this.props.navigator.navigationContext.currentRoute.currentLongitude);
+          } catch (error) {
+            console.log(error);
+        }
     },
 
     renderHeader(){
@@ -76,8 +106,11 @@ module.exports = React.createClass({
               <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
             </TouchableOpacity>
             <View style={{flex: 9, alignItems: 'center', marginTop: 10, marginRight: 35}}>
-              <Text style={styles.stickySectionText}>{this.props.navigator.navigationContext.currentRoute.title}</Text>
+              <Text style={styles.stickySectionText}>{this.state.title}</Text>
             </View>
+            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.onAddFavoriteGeoLocationClick()}}>
+              <Image source={require('./star.png')}  style={{ width: 24, height: 24}} />
+            </TouchableOpacity>
           </View>
         )
         }else{
@@ -85,9 +118,11 @@ module.exports = React.createClass({
             <ToolbarAndroid
               titleColor='white'
               style={{backgroundColor: '#2A3132', height: 56}}
-              title={ this.props.navigator.navigationContext.currentRoute.title }
+              title={ this.state.title }
               navIcon={require('./left-arrow24.png')}
               onIconClicked={(onBackPress) => {this.props.navigator.pop()}}
+              actions={[{title: 'Fav', icon: require('./star.png'), show: 'always'}]}
+              onActionSelected={this.onAddFavoriteGeoLocationClick}
             />
           )
         }

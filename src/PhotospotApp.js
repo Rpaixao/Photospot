@@ -5,6 +5,7 @@ var FestaDetail = require('./components/photodetail');
 var List = require('./components/photoslist');
 var Home = require('./components/home');
 var MapView = require('./components/mapview');
+var PhotoView = require('./components/photoview')
 
 var SCENE_CONFIG = Platform.OS === 'ios' ? Navigator.SceneConfigs.PushFromRight : Navigator.SceneConfigs.FadeAndroid;
 
@@ -12,7 +13,8 @@ var ROUTES = {
   list: List,
   festa: FestaDetail,
   home: Home,
-  mapview: MapView
+  mapview: MapView,
+  photoview: PhotoView
 };
 
 var PhotospotApp = React.createClass({
@@ -47,7 +49,7 @@ var PhotospotApp = React.createClass({
       />
       <Navigator
         ref="navigator"
-        initialRoute={{name: 'home'}}
+        initialRoute={{name: 'mapview'}}
         renderScene={this.renderScene}
         configureScene={(route) => { return SCENE_CONFIG }}
       />

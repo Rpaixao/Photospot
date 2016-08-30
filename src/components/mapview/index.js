@@ -25,8 +25,8 @@ import ReactNative, {
 module.exports = React.createClass({
 
     getInitialState(){
-      var latitude = parseInt(this.props.navigator.navigationContext.currentRoute.currentLatitude);
-      var longitude = parseInt(this.props.navigator.navigationContext.currentRoute.currentLongitude);
+      var latitude = 0;
+      var longitude = 0;
         return {
           region: {
             latitude: latitude,
@@ -34,8 +34,12 @@ module.exports = React.createClass({
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           },
-          locationRadius: 16,
+          locationRadius: 1,
         };
+    },
+
+    componentDidMount(){
+      this.onPressMyLocationEvent();
     },
 
     onRegionChange(region) {
