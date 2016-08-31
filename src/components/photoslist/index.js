@@ -30,7 +30,6 @@ import ReactNative, {
 module.exports = React.createClass({
 
   getInitialState(){
-
     DATASOURCE_MANAGER = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       //var titleString = "" + this.props.navigator.navigationContext.currentRoute.currentLatitude + "," + this.props.navigator.navigationContext.currentRoute.currentLongitude;
       var titleString = "Location Photos"
@@ -39,15 +38,6 @@ module.exports = React.createClass({
         longitude: this.props.navigator.navigationContext.currentRoute.currentLatitude,
         title: titleString
       };
-  },
-
-  componentWillMount(){
-    AsyncStorage.getItem('@FavoriteGeoLocations:total', (error, result) => {
-      if (error) {
-        return;
-      }
-      console.log(result);
-    });
   },
 
   componentDidMount(){
@@ -80,21 +70,17 @@ module.exports = React.createClass({
     },
 
     onHomePress(){
-
+        FESTAS = [];
+        DIAS = [];
         this.props.navigator.pop();
     },
 
     onAddFavoriteGeoLocationClick(){
         try {
-            const value = AsyncStorage.getItem('@FavoriteGeoLocations:total');
-            console.log(value);
-            value = value + 1;
-            console.log(value);
-            AsyncStorage.setItem('@FavoriteGeoLocations:total', value);
-            AsyncStorage.setItem('@FavoriteGeoLocationsLatitude:' + value, this.props.navigator.navigationContext.currentRoute.currentLatitude);
-            AsyncStorage.setItem('@FavoriteGeoLocationsLongitude:' + value, this.props.navigator.navigationContext.currentRoute.currentLongitude);
+            AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
+            return
           } catch (error) {
-            console.log(error);
+            console.log('Error ');
         }
     },
 
@@ -108,7 +94,7 @@ module.exports = React.createClass({
             <View style={{flex: 9, alignItems: 'center', marginTop: 10, marginRight: 35}}>
               <Text style={styles.stickySectionText}>{this.state.title}</Text>
             </View>
-            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.onAddFavoriteGeoLocationClick()}}>
+            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.onAddFavoriteGeoLocationClick}}>
               <Image source={require('./star.png')}  style={{ width: 24, height: 24}} />
             </TouchableOpacity>
           </View>
@@ -192,7 +178,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEE'
   },
   background: {
-    position: 'absolute',
     top: 0,
     left: 0,
     width: window.width,

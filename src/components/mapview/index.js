@@ -5,7 +5,6 @@ import ReactNative, {
    StyleSheet,
    TouchableOpacity,
    Image,
-   Button,
    View,
    ListView,
    Text,
@@ -47,7 +46,7 @@ module.exports = React.createClass({
     },
 
     onPressLocationEvent(){
-      this.props.navigator.push({name: 'list', title: 'Other Location Photos', currentLatitude: this.state.region.latitude, currentLongitude: this.state.region.longitude, radius: this.state.locationRadius});
+      this.props.navigator.push({name: 'list', currentLatitude: this.state.region.latitude, currentLongitude: this.state.region.longitude, radius: this.state.locationRadius});
     },
 
     onPressMyLocationEvent(){
@@ -59,8 +58,8 @@ module.exports = React.createClass({
             region: {
               latitude: currentLatitude,
               longitude: currentLongitude,
-              latitudeDelta: 0.5,
-              longitudeDelta: 0.5,
+              latitudeDelta: this.state.region.latitudeDelta,
+              longitudeDelta: this.state.region.longitudeDelta
             }
           });
         },
@@ -84,25 +83,25 @@ module.exports = React.createClass({
 
             </MapView>
             <View>
-              <View style={{top:(windowSize.height/2) - PIN_SHIFT}}>
+              <View style={styles.pinView}>
                 <TouchableOpacity onPress={() => {}}>
-                  <Image source={require('./pin3.png')}  style={{ width: 24, height: 24}} />
+                  <Image source={require('./view42.png')}  style={{ width: 32, height: 32}} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            <View style={{marginLeft: 5, top:(windowSize.height/1.6)}}>
-              <View style={{width: windowSize.width-10, marginBottom: 10, marginRight: 10, backgroundColor: 'rgba(0,0,0,0)', alignItems: 'flex-end'}}>
-                <TouchableOpacity onPress = {this.onPressMyLocationEvent} style={{alignItems: 'center', justifyContent: 'center', width: 48, height: 48, backgroundColor: 'white', borderRadius: 50, borderWidth: 1, borderColor: '#DDD'}}>
+            <View style={styles.bottomContainer}>
+              <View style={styles.myLocationButtonView}>
+                <TouchableOpacity onPress = {this.onPressMyLocationEvent} style={styles.myLocationButton}>
                   <Image source={require('./mylocation-blue.png')}  style={{ width: 24, height: 24}} />
                 </TouchableOpacity>
               </View>
-              <View style={{width: windowSize.width-10, borderRadius: 10, marginBottom: 40, backgroundColor: 'rgba(0,0,0,0.3)'}}>
-                <Slider style={{marginTop: 5, marginLeft: 10, marginRight: 10}} value={1} step={1} minimumValue={1} maximumValue={32} onValueChange={(locationRadius) => this.setState({locationRadius: locationRadius})}/>
+              <View style={styles.sliderView}>
+                <Slider style={styles.slider} value={1} step={1} minimumValue={1} maximumValue={32} onValueChange={(locationRadius) => this.setState({locationRadius: locationRadius})}/>
                 <Text style={styles.whiteFont} >
                   Map Radius: {this.state.locationRadius } Km
                 </Text>
-                <TouchableOpacity onPress={this.onPressLocationEvent} style={{marginTop: 10, marginBottom: 10, marginLeft: 40, marginRight: 40}}>
+                <TouchableOpacity onPress={this.onPressLocationEvent} style={styles.photosButton}>
                   <View style={styles.nearbyButton}>
                       <Text style={styles.whiteFont}>VIEW PHOTOS</Text>
                   </View>
@@ -131,12 +130,53 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
   },
+  pinView: {
+    top:(windowSize.height/2) - PIN_SHIFT
+  },
   map: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  bottomContainer: {
+    marginLeft: 5,
+    top:(windowSize.height/1.6)
+  },
+  myLocationButtonView: {
+    width: windowSize.width-10,
+    marginBottom: 10,
+    marginRight: 10,
+    backgroundColor: 'rgba(0,0,0,0)',
+    alignItems: 'flex-end'
+  },
+  myLocationButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 48,
+    height: 48,
+    backgroundColor:'white',
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#DDD'
+  },
+  sliderView: {
+    width: windowSize.width-10,
+    borderRadius: 10,
+    marginBottom: 40,
+    backgroundColor: 'rgba(0,0,0,0.3)'
+  },
+  slider: {
+    marginTop: 5,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  photosButton: {
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 40,
+    marginRight: 40
   },
   whiteFont: {
     textAlign: 'center',
