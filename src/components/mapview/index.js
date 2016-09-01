@@ -50,6 +50,7 @@ module.exports = React.createClass({
     },
 
     onPressMyLocationEvent(){
+      alert("!");
       navigator.geolocation.getCurrentPosition(
         (position) => {
           var currentLatitude = position.coords.latitude;

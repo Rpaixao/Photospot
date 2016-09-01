@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactNative, { View, Navigator, Platform, StatusBar, BackAndroid } from 'react-native';
 
-var FestaDetail = require('./components/photodetail');
+var PhotoDetail = require('./components/photodetail');
 var List = require('./components/photoslist');
 var Home = require('./components/home');
 var MapView = require('./components/mapview');
@@ -11,7 +11,7 @@ var SCENE_CONFIG = Platform.OS === 'ios' ? Navigator.SceneConfigs.PushFromRight 
 
 var ROUTES = {
   list: List,
-  festa: FestaDetail,
+  photodetail: PhotoDetail,
   home: Home,
   mapview: MapView,
   photoview: PhotoView

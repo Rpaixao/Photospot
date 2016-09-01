@@ -28,7 +28,7 @@ let mapHeight = Dimensions.get('window').height - STICKY_HEADER_HEIGHT - 40;
 var REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
 var GMAPS_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=' + windowWidth + 'x' + mapHeight + '&key=AIzaSyB3mA9yEf03lJWnmkmX4rowwWawOu6TTco&maptype=hybrid';
 
-class FestaDetail extends Component {
+class PhotoDetail extends Component {
   constructor(props) {
     super(props);
 
@@ -49,7 +49,6 @@ class FestaDetail extends Component {
     }).then((response) => {
         return response.json();
     }).then((jsonResponse) => {
-        console.log(jsonResponse);
         let locationJson = jsonResponse.photo.location;
         this.setState({
             geoLocationData : {
@@ -317,4 +316,4 @@ const styles = StyleSheet.create({
   }
 });
 
-module.exports = FestaDetail;
+module.exports = PhotoDetail;

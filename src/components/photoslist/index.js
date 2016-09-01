@@ -23,15 +23,13 @@ import ReactNative, {
  var PHOTOS = [];
  var DATASOURCE_MANAGER;
 
- var IMAGE_URL = "https://farm9.staticflickr.com/8775/28826197452_72a2426634_s.jpg";
- var REQUEST_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&per_page=200&page=1&extra=views";
- var LOCATION_REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
+ var REQUEST_BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&per_page=200&page=1&extra=views";
+ var LOCATION_REQUEST_BASE_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
 
 module.exports = React.createClass({
 
   getInitialState(){
     DATASOURCE_MANAGER = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      //var titleString = "" + this.props.navigator.navigationContext.currentRoute.currentLatitude + "," + this.props.navigator.navigationContext.currentRoute.currentLongitude;
       var titleString = "Location Photos"
       return {
         latitude: this.props.navigator.navigationContext.currentRoute.currentLatitude,
@@ -49,7 +47,7 @@ module.exports = React.createClass({
     var latitude = this.props.navigator.navigationContext.currentRoute.currentLatitude;
     var longitude = this.props.navigator.navigationContext.currentRoute.currentLongitude;
 
-    var urlString = REQUEST_URL + '&lat=' + latitude + '&lon=' + longitude + '&radius=' + radius + '&sort=date-taken-desc';
+    var urlString = REQUEST_BASE_URL + '&lat=' + latitude + '&lon=' + longitude + '&radius=' + radius + '&sort=date-taken-desc';
     console.log(urlString);
     fetch(urlString, {
         method: 'get'
@@ -61,26 +59,25 @@ module.exports = React.createClass({
             dataSource : DATASOURCE_MANAGER.cloneWithRows(photosJson)
         })
     }).catch((err) => {
-        console.log('why!! -' + err)
+        alert("Ups..Error fetching data: " + err);
     });
   },
 
     onPressEvent(rowData){
-        this.props.navigator.push({name: 'festa', festaData: rowData});
+        this.props.navigator.push({name: 'photodetail', photoData: rowData});
     },
 
     onHomePress(){
-        FESTAS = [];
-        DIAS = [];
         this.props.navigator.pop();
     },
 
     onAddFavoriteGeoLocationClick(){
         try {
             AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
-            return
+            var value = AsyncStorage.getItem('@MySuperStore:key');
+            return;
           } catch (error) {
-            console.log('Error ');
+            alert("Error saving");
         }
     },
 
@@ -94,7 +91,7 @@ module.exports = React.createClass({
             <View style={{flex: 9, alignItems: 'center', marginTop: 10, marginRight: 35}}>
               <Text style={styles.stickySectionText}>{this.state.title}</Text>
             </View>
-            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.onAddFavoriteGeoLocationClick}}>
+            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.onAddFavoriteGeoLocationClick()}}>
               <Image source={require('./star.png')}  style={{ width: 24, height: 24}} />
             </TouchableOpacity>
           </View>
@@ -135,10 +132,8 @@ module.exports = React.createClass({
               dataSource={ this.state.dataSource }
               renderSeparator={(sectionID, rowID) => <View key={`separator-${rowID}`} style={styles.listSeparator}/>}
               renderRow={(rowData) => (
-                <TouchableOpacity style={styles.rowContainer} onPress={(onPress) => {this.props.navigator.push({name: 'festa', photoData: rowData})}}>
-                    <View style={{backgroundColor: 'white'}}>
+                <TouchableOpacity style={styles.rowContainer} onPress={(onPress) => {this.props.navigator.push({name: 'photodetail', photoData: rowData})}}>
                     { this.renderImage(rowData) }
-                    </View>
                     <PhotoRowContent rowData={rowData}/>
                   </TouchableOpacity>
                )}
