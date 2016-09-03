@@ -50,7 +50,6 @@ module.exports = React.createClass({
     },
 
     onPressMyLocationEvent(){
-      alert("!");
       navigator.geolocation.getCurrentPosition(
         (position) => {
           var currentLatitude = position.coords.latitude;
@@ -91,6 +90,9 @@ module.exports = React.createClass({
               </View>
             </View>
 
+            <View style={styles.topContainer}>
+            </View>
+
             <View style={styles.bottomContainer}>
               <View style={styles.myLocationButtonView}>
                 <TouchableOpacity onPress = {this.onPressMyLocationEvent} style={styles.myLocationButton}>
@@ -98,15 +100,17 @@ module.exports = React.createClass({
                 </TouchableOpacity>
               </View>
               <View style={styles.sliderView}>
+                <View style={{marginTop: 5}}>
+                  <Text style={styles.whiteFont} >
+                    {this.state.locationRadius } Km
+                  </Text>
+                </View>
                 <Slider style={styles.slider} value={1} step={1} minimumValue={1} maximumValue={32} onValueChange={(locationRadius) => this.setState({locationRadius: locationRadius})}/>
-                <Text style={styles.whiteFont} >
-                  Map Radius: {this.state.locationRadius } Km
-                </Text>
-                <TouchableOpacity onPress={this.onPressLocationEvent} style={styles.photosButton}>
-                  <View style={styles.nearbyButton}>
-                      <Text style={styles.whiteFont}>VIEW PHOTOS</Text>
-                  </View>
-                </TouchableOpacity>
+                <View style={styles.photosButtonView}>
+                  <TouchableOpacity onPress = {this.onPressLocationEvent} style={styles.photosButton}>
+                    <Image source={require('./look42white.png')}  style={{ width: 24, height: 24}} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -142,8 +146,10 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   bottomContainer: {
-    marginLeft: 5,
-    top:(windowSize.height/1.6)
+    top:(windowSize.height/1.5),
+  },
+  topContainer:{
+    top: 0
   },
   myLocationButtonView: {
     width: windowSize.width-10,
@@ -156,34 +162,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 48,
-    height: 48,
+    height: 49,
     backgroundColor:'white',
     borderRadius: 50,
     borderWidth: 1,
     borderColor: '#DDD'
   },
   sliderView: {
-    width: windowSize.width-10,
-    borderRadius: 10,
-    marginBottom: 40,
+    borderTopWidth: 1,
+    borderColor: 'rgba()rgba(0,0,0,0.1)',
+    width: windowSize.width,
+    height: windowSize.height/1.5,
     backgroundColor: 'rgba(0,0,0,0.3)'
   },
   slider: {
-    marginTop: 5,
     marginLeft: 10,
     marginRight: 10
   },
+  photosButtonView: {
+    width: windowSize.width,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   photosButton: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 40,
-    marginRight: 40
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:'#258039',
+    elevation: 10,
+    borderRadius: 50,
+    width: 48,
+    height: 48,
   },
   whiteFont: {
     textAlign: 'center',
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold'
+    color: 'white',
+    fontSize: 12,
   },
   nearbyButton: {
       borderRadius: 5,

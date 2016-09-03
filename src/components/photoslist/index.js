@@ -56,7 +56,8 @@ module.exports = React.createClass({
     }).then((jsonResponse) => {
         let photosJson = jsonResponse.photos.photo;
         this.setState({
-            dataSource : DATASOURCE_MANAGER.cloneWithRows(photosJson)
+            dataSource : DATASOURCE_MANAGER.cloneWithRows(photosJson),
+            hasPhotos: photosJson.length > 0
         })
     }).catch((err) => {
         alert("Ups..Error fetching data: " + err);
@@ -112,7 +113,11 @@ module.exports = React.createClass({
       },
 
       hasEnoughData() {
-        return this.state.dataSource ;
+        return this.state.dataSource && this.state.hasPhotos;
+      },
+
+      hasEnoughDataButHasNoPhotos() {
+        return this.state.dataSource && !this.state.hasPhotos;
       },
 
       renderImage(rowData){
@@ -140,11 +145,24 @@ module.exports = React.createClass({
             />
           );
         }else{
-          return(
-            <View style={{flex:1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-              <ActivityIndicator size="large"/>
-            </View>
-          );
+          if(!this.hasEnoughData() && !this.hasEnoughDataButHasNoPhotos()){
+            return(
+              <View style={{flex:1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator size="large"/>
+              </View>
+            );
+          }else{
+            return(
+              <View style={{flex:1, marginTop: 20, marginLeft: 10, marginRight: 5, alignItems: 'center'}}>
+                <Text style={{fontSize: 24}}>There are no photos here.. </Text>
+                <Text style={{fontSize: 16, marginTop: 10, textAlign: 'center'}}>Please try to increase the distance or choose another geolocation.</Text>
+                <TouchableOpacity onPress = {() => this.props.navigator.pop()} style={styles.noPhotosBackButton}>
+                  <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
+                </TouchableOpacity>
+              </View>
+            );
+          }
+
         }
       },
 
@@ -251,5 +269,15 @@ const styles = StyleSheet.create({
     color: '#999',
     marginLeft: 10,
     marginBottom: 10
-  }
+  },
+  noPhotosBackButton: {
+    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:'#2A3132',
+    elevation: 10,
+    borderRadius: 50,
+    width: 48,
+    height: 48,
+  },
 });
