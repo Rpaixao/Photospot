@@ -111,7 +111,7 @@ class PhotoDetail extends Component {
                         width: window.width-10,
                         height: mapHeight}}>
 
-            <TouchableHighlight underlayColor='#FFF' onPress={() => {this.onPressDirectionsEvent(this.state.geoLocationData.latitude, this.state.geoLocationData.longitude)}} style={{alignItems: 'center', justifyContent: 'center', width: 48, height: 48, backgroundColor: 'white', borderRadius: 50, borderWidth: 1, borderColor: '#DDD', marginLeft: 10, marginTop: 10}}>
+            <TouchableHighlight underlayColor='#FFF' onPress={() => {this.onPressGoToWebsiteEvent(this.onPressGoToWebsiteEvent("http://maps.google.com/maps?z=12&t=m&q=loc:" + this.state.geoLocationData.latitude + "+" + this.state.geoLocationData.longitude + ""))}} style={{alignItems: 'center', justifyContent: 'center', width: 48, height: 48, backgroundColor: 'white', borderRadius: 50, borderWidth: 1, borderColor: '#DDD', marginLeft: 10, marginTop: 10}}>
              <Image source={require('./directions.png')}  style={{ width: 32, height: 32}} />
             </TouchableHighlight>
         </Image>
@@ -122,8 +122,8 @@ class PhotoDetail extends Component {
     return this.state.geoLocationData ;
   }
 
-  onPressDirectionsEvent(latitude, longitude){
-    var urlString = "http://maps.google.com/maps?z=12&t=m&q=loc:" + latitude + "+" + longitude;
+  onPressGoToWebsiteEvent(urlString){
+      urlString += "";
     Linking.canOpenURL(urlString).then(supported => {
       if (!supported) {
         console.log('Can\'t handle url: ');
@@ -247,13 +247,18 @@ class PhotoDetail extends Component {
                           <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
                         </TouchableOpacity>
                       </View>
-                      <View key="fixed-header-share" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end', paddingRight: 20}]}>
+                      <View key="fixed-header-share" style={[styles.fixedSection, {flex: 12, alignItems:'flex-end', paddingRight: 20}]}>
                           <TouchableOpacity style={{width: 30}} onPress={()=>{Share.open({title: "React Native",
                               message: "Look this place I found on Photospot App!",
                               url: this.state.photoInfo.url,
                               subject: "I found this spot using Photospot App!",
                               title: "I found this spot using Photospot App!" })}}>
                           <Image source={require('./share.png')} style={{ width: 24, height: 24}} />
+                          </TouchableOpacity>
+                      </View>
+                      <View key="fixed-header-flickr" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end', paddingRight: 20}]}>
+                          <TouchableOpacity style={{width: 30}} onPress={() => {this.onPressGoToWebsiteEvent(this.state.photoInfo.url)}}>
+                              <Image source={require('./flickr48.png')} style={{ width: 24, height: 24}} />
                           </TouchableOpacity>
                       </View>
                   </View>
