@@ -41,7 +41,7 @@ module.exports = React.createClass({
           let locationJson = jsonResponse.photo.location;
           this.setState({
               geoLocationData : {
-                country: locationJson.country !== undefined ? locationJson.country._content : "",
+                country: locationJson.country._content,
                 locality: locationJson.locality !== undefined ? locationJson.locality._content : "",
                 region: locationJson.region !== undefined ? locationJson.region._content : "",
                 county: locationJson.county !== undefined ? locationJson.county._content : "",

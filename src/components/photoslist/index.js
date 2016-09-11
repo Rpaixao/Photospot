@@ -154,7 +154,7 @@ module.exports = React.createClass({
           }else{
             return(
               <View style={{flex:1, marginTop: 20, marginLeft: 10, marginRight: 5, alignItems: 'center'}}>
-                <Text style={{fontSize: 24}}>There are no photos here.. </Text>
+                <Text style={{fontSize: 24}}>:( There are no photos here.. </Text>
                 <Text style={{fontSize: 16, marginTop: 10, textAlign: 'center'}}>Please try to increase the distance or choose another geolocation.</Text>
                 <TouchableOpacity onPress = {() => this.props.navigator.pop()} style={styles.noPhotosBackButton}>
                   <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />

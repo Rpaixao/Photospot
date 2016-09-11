@@ -3,5 +3,3 @@ rootProject.name = 'Photospot'
 include ':app'
 include ':react-native-maps'
 project(':react-native-maps').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-maps/android')
-include ':react-native-image-zoom'
-project(':react-native-image-zoom').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-zoom/android')

@@ -8,7 +8,7 @@ const  {
     StyleSheet
 } = require('react-native');
 
-const ImageZoom = require('react-native-image-zoom').default;
+var ResponsiveImage = require('react-native-responsive-image');
 
 import Dimensions from 'Dimensions';
 let windowWidth = Dimensions.get('window').width;
@@ -22,11 +22,8 @@ var PhotoView = React.createClass({
 
   render() {
       return(
-          <TouchableOpacity onPress={this.onImagePress} style={styles.highlightTouchableContainer} >
-            <ImageZoom
-                  style={styles.container}
-                  resizeMode={Image.resizeMode.contain}
-                  source={{ uri: this.props.route.imageUri }} />
+          <TouchableOpacity onPress={this.onImagePress} style={styles.container} >
+                <ResponsiveImage initWidth={windowWidth+30} initHeight={windowHeight+40} source={{uri: this.props.route.imageUri}}/>
           </TouchableOpacity>
       )
   }
@@ -36,10 +33,9 @@ var PhotoView = React.createClass({
 const styles = StyleSheet.create({
 container: {
   flex: 1,
-    backgroundColor: 'black'
-},
-highlightTouchableContainer: {
-  flex: 1,
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'black'
 }
 });
 

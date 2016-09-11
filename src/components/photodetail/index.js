@@ -25,7 +25,8 @@ let windowHeight = Dimensions.get('window').heights;
 const STICKY_HEADER_HEIGHT = Platform.OS === 'ios' ? 60 : 56; ;
 let mapHeight = Dimensions.get('window').height - STICKY_HEADER_HEIGHT - 40;
 
-var REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
+var LOCATION_REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
+var INFO_REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
 var GMAPS_URL = 'https://maps.googleapis.com/maps/api/staticmap?size=' + windowWidth + 'x' + mapHeight + '&key=AIzaSyB3mA9yEf03lJWnmkmX4rowwWawOu6TTco&maptype=hybrid';
 
 class PhotoDetail extends Component {
@@ -40,10 +41,32 @@ class PhotoDetail extends Component {
 
   componentDidMount(){
     this.fetchGeoLocation();
+    this.fetchInfo();
+  }
+
+  fetchInfo(){
+    var requestURLWithPhotoID = INFO_REQUEST_URL + "&photo_id=" + this.state.photoData.id;
+    fetch(requestURLWithPhotoID, {
+        method: 'get'
+    }).then((response) => {
+        return response.json();
+    }).then((jsonResponse) => {
+        let infoJson = jsonResponse.photo;
+        this.setState({
+            photoInfo : {
+              username: infoJson.owner.username,
+              title: infoJson.title._content,
+              url: infoJson.urls.url._content,
+              taken: infoJson.dates.taken
+            }
+        })
+    }).catch((err) => {
+        alert('why!! -' + err)
+    });
   }
 
   fetchGeoLocation(){
-    var requestURLWithPhotoID = REQUEST_URL + "&photo_id=" + this.state.photoData.id;
+    var requestURLWithPhotoID = LOCATION_REQUEST_URL + "&photo_id=" + this.state.photoData.id;
     fetch(requestURLWithPhotoID, {
         method: 'get'
     }).then((response) => {
@@ -138,8 +161,14 @@ class PhotoDetail extends Component {
               <Text style={ styles.sectionTitleText }>
                 { this.state.geoLocationData.region }, { this.state.geoLocationData.country }
               </Text>
-              <Text style={ styles.titleText }>
+              <Text style={ styles.titleText } numberOfLines={3}>
                 { this.state.photoData.title }
+              </Text>
+              <Text style={styles.titleBoldText}>
+                taken on { this.state.photoInfo.taken }
+              </Text>
+              <Text style={styles.titleBoldText}>
+                 by { this.state.photoInfo.username }
               </Text>
             </View>
           </TouchableOpacity>
@@ -301,6 +330,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: '#BBB'
+  },
+  titleBoldText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#BBB',
+    fontWeight: 'bold'
   },
   row: {
     overflow: 'hidden',
