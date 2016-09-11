@@ -16,6 +16,7 @@ import ReactNative, {
    Linking
  } from 'react-native';
 
+import Share, {ShareSheet, Button} from 'react-native-share';
 var ParallaxScrollView = require('react-native-parallax-scroll-view');
 var photoURL = "";
 
@@ -56,7 +57,7 @@ class PhotoDetail extends Component {
             photoInfo : {
               username: infoJson.owner.username,
               title: infoJson.title._content,
-              url: infoJson.urls.url._content,
+              url: infoJson.urls.url[0]._content,
               taken: infoJson.dates.taken
             }
         })
@@ -240,10 +241,21 @@ class PhotoDetail extends Component {
               renderStickyHeader={() => this.renderStickyHeaderContent()}
 
               renderFixedHeader={() => (
-                  <View key="fixed-header" style={styles.fixedSection}>
-                    <TouchableOpacity onPress={(onPress) => {this.state.navigator.pop()}}>
-                      <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
-                    </TouchableOpacity>
+                  <View style={{flex: 1, flexDirection: 'row'}}>
+                      <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1}]}>
+                        <TouchableOpacity style={{width: 30}} onPress={(onPress) => {this.state.navigator.pop()}}>
+                          <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
+                        </TouchableOpacity>
+                      </View>
+                      <View key="fixed-header-share" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end', paddingRight: 20}]}>
+                          <TouchableOpacity style={{width: 30}} onPress={()=>{Share.open({title: "React Native",
+                              message: "Look this place I found on Photospot App!",
+                              url: this.state.photoInfo.url,
+                              subject: "I found this spot using Photospot App!",
+                              title: "I found this spot using Photospot App!" })}}>
+                          <Image source={require('./share.png')} style={{ width: 24, height: 24}} />
+                          </TouchableOpacity>
+                      </View>
                   </View>
               )}>
 
