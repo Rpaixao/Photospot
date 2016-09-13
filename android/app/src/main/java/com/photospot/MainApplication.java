@@ -11,6 +11,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import cl.json.RNSharePackage;
 import com.reactnative.photoview.PhotoViewPackage;
+import com.image.zoom.ReactImageZoom;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new MapsPackage(),
           new RNSharePackage(),
-          new PhotoViewPackage()
+          new PhotoViewPackage(),
+          new ReactImageZoom()
       );
     }
   };

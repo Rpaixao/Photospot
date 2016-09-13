@@ -11,6 +11,7 @@ const  {
 
 var ResponsiveImage = require('react-native-responsive-image');
 import PhotoView from 'react-native-photo-view';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Dimensions from 'Dimensions';
 let windowWidth = Dimensions.get('window').width;
@@ -27,7 +28,7 @@ var PhotoFullScreenView = React.createClass({
             <View style={{flex: 1, backgroundColor: 'black'}}>
                 <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end'}]}>
                     <TouchableOpacity style={{width: 30}} onPress={(onPress) => {this.props.navigator.pop()}}>
-                        <Image source={require('./cross.png')}  style={{ width: 24, height: 24}} />
+                        <Icon name="times" size={32} color="white" />
                     </TouchableOpacity>
                 </View>
                 <View style={{flex: 9}}>
