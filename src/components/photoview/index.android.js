@@ -3,9 +3,9 @@ const React = require('react');
 const  {
     View,
     Text,
-    Image,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Image
 } = require('react-native');
 
 var ResponsiveImage = require('react-native-responsive-image');
@@ -22,9 +22,16 @@ var PhotoView = React.createClass({
 
   render() {
       return(
-          <TouchableOpacity onPress={this.onImagePress} style={styles.container} >
-                <ResponsiveImage initWidth={windowWidth+30} initHeight={windowHeight+40} source={{uri: this.props.route.imageUri}}/>
-          </TouchableOpacity>
+      <View style={{flex: 1, backgroundColor: 'black'}}>
+          <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end'}]}>
+              <TouchableOpacity style={{width: 30}} onPress={(onPress) => {this.props.navigator.pop()}}>
+                  <Image source={require('./cross.png')}  style={{ width: 24, height: 24}} />
+              </TouchableOpacity>
+          </View>
+          <View style={{flex: 9, alignItems:'center', justifyContent:'center'}}>
+              <ResponsiveImage initWidth={windowWidth} initHeight={400} source={{uri: this.props.route.imageUri}}/>
+          </View>
+      </View>
       )
   }
 
@@ -36,7 +43,12 @@ container: {
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: 'black'
-}
+},
+    fixedSection: {
+
+    bottom: -10,
+        right: 15
+    },
 });
 
 
