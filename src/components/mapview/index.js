@@ -18,6 +18,7 @@ import ReactNative, {
 
  import Dimensions from 'Dimensions';
  var windowSize = Dimensions.get('window');
+import Icon from 'react-native-vector-icons/FontAwesome';
 
  const PIN_SHIFT = (Platform.OS === 'ios') ? 10 : 25
 
@@ -108,7 +109,7 @@ module.exports = React.createClass({
                 <Slider style={styles.slider} value={1} step={1} minimumValue={1} maximumValue={32} onValueChange={(locationRadius) => this.setState({locationRadius: locationRadius})}/>
                 <View style={styles.photosButtonView}>
                   <TouchableOpacity onPress = {this.onPressLocationEvent} style={styles.photosButton}>
-                    <Image source={require('./look42white.png')}  style={{ width: 24, height: 24}} />
+                      <Icon name="search" size={24} color="white" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   bottomContainer: {
-    top:(windowSize.height/1.5),
+    top:(windowSize.height/1.7),
   },
   topContainer:{
     top: 0

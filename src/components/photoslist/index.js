@@ -17,11 +17,15 @@ import ReactNative, {
  var ResponsiveImage = require('react-native-responsive-image');
  var PhotoRowContent = require('./photorow');
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+
  import Dimensions from 'Dimensions';
  let windowWidth = Dimensions.get('window').width;
  let windowHeight = Dimensions.get('window').height;
  var PHOTOS = [];
  var DATASOURCE_MANAGER;
+
+const PLATFORM_IOS = Platform.OS === 'ios';
 
  var REQUEST_BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&per_page=200&page=1&extra=views";
  var LOCATION_REQUEST_BASE_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
@@ -83,33 +87,19 @@ module.exports = React.createClass({
     },
 
     renderHeader(){
-      if(Platform.OS === 'ios'){
         return(
           <View style={styles.stickySection}>
-            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginLeft: 20, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.props.navigator.pop()}}>
-              <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
+            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginLeft: 10, marginTop: Platform.OS === 'ios'? 5: 0, alignItems: 'center', justifyContent:'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.props.navigator.pop()}}>
+              <Icon name={Platform.OS !== 'ios' ? 'arrow-left' : 'chevron-left'} size={24} color="white" />
             </TouchableOpacity>
-            <View style={{flex: 9, alignItems: 'center', marginTop: 10, marginRight: 35}}>
+            <View style={{flex: 9, alignItems: PLATFORM_IOS ? 'center': 'flex-start', marginTop: PLATFORM_IOS ? 10 : 15, marginLeft: PLATFORM_IOS? -15: 15}}>
               <Text style={styles.stickySectionText}>{this.state.title}</Text>
             </View>
-            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: 5, alignItems: 'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {this.onAddFavoriteGeoLocationClick()}}>
-              <Image source={require('./star.png')}  style={{ width: 24, height: 24}} />
+            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: Platform.OS === 'ios'? 5: 0, alignItems: 'center', justifyContent:'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {alert('Available soon!')}}>
+              <Icon name='heart' size={20} color="white" />
             </TouchableOpacity>
           </View>
         )
-        }else{
-          return(
-            <ToolbarAndroid
-              titleColor='white'
-              style={{backgroundColor: '#2A3132', height: 56}}
-              title={ this.state.title }
-              navIcon={require('./left-arrow24.png')}
-              onIconClicked={(onBackPress) => {this.props.navigator.pop()}}
-              actions={[{title: 'Fav', icon: require('./star.png'), show: 'always'}]}
-              onActionSelected={this.onAddFavoriteGeoLocationClick}
-            />
-          )
-        }
       },
 
       hasEnoughData() {

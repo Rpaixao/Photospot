@@ -16,6 +16,8 @@ import ReactNative, {
    Linking
  } from 'react-native';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import Share, {ShareSheet, Button} from 'react-native-share';
 var ParallaxScrollView = require('react-native-parallax-scroll-view');
 var photoURL = "";
@@ -244,16 +246,16 @@ class PhotoDetail extends Component {
                   <View style={{flex: 1, flexDirection: 'row'}}>
                       <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1}]}>
                         <TouchableOpacity style={{width: 30}} onPress={(onPress) => {this.state.navigator.pop()}}>
-                          <Image source={require('./left-arrow24.png')}  style={{ width: 24, height: 24}} />
+                            <Icon name={Platform.OS !== 'ios' ? 'arrow-left' : 'chevron-left'} size={24} color="white" />
                         </TouchableOpacity>
                       </View>
-                      <View key="fixed-header-share" style={[styles.fixedSection, {flex: 12, alignItems:'flex-end', paddingRight: 20}]}>
+                      <View key="fixed-header-share" style={[styles.fixedSection, {flex: 20, alignItems:'flex-end', paddingRight: 20}]}>
                           <TouchableOpacity style={{width: 30}} onPress={()=>{Share.open({title: "React Native",
                               message: "Look this place I found on Photospot App!",
                               url: this.state.photoInfo.url,
                               subject: "I found this spot using Photospot App!",
                               title: "I found this spot using Photospot App!" })}}>
-                          <Image source={require('./share.png')} style={{ width: 24, height: 24}} />
+                              <Icon name="share-alt-square" size={24} color="white" />
                           </TouchableOpacity>
                       </View>
                       <View key="fixed-header-flickr" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end', paddingRight: 20}]}>
