@@ -16,6 +16,8 @@ import ReactNative, {
 
  var ResponsiveImage = require('react-native-responsive-image');
  var PhotoRowContent = require('./photorow');
+ var STORAGE_KEY = '@AsyncStorageExample:key';
+ import PhotospotState from '../../state';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -27,7 +29,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const PLATFORM_IOS = Platform.OS === 'ios';
 
- var REQUEST_BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&per_page=200&page=1&extra=views";
+ var REQUEST_BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&per_page=40&extra=views&page=";
  var LOCATION_REQUEST_BASE_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
 
 module.exports = React.createClass({
@@ -38,7 +40,8 @@ module.exports = React.createClass({
       return {
         latitude: this.props.navigator.navigationContext.currentRoute.currentLatitude,
         longitude: this.props.navigator.navigationContext.currentRoute.currentLatitude,
-        title: titleString
+        title: titleString,
+        currentPage: 1
       };
   },
 
@@ -51,18 +54,32 @@ module.exports = React.createClass({
     var latitude = this.props.navigator.navigationContext.currentRoute.currentLatitude;
     var longitude = this.props.navigator.navigationContext.currentRoute.currentLongitude;
 
-    var urlString = REQUEST_BASE_URL + '&lat=' + latitude + '&lon=' + longitude + '&radius=' + radius + '&sort=date-taken-desc';
-    console.log(urlString);
+    var urlString = REQUEST_BASE_URL + this.state.currentPage + '&lat=' + latitude + '&lon=' + longitude + '&radius=' + radius + '&sort=date-taken-desc';
+    var currentPage = this.state.currentPage + 1;
+
     fetch(urlString, {
         method: 'get'
     }).then((response) => {
         return response.json();
     }).then((jsonResponse) => {
         let photosJson = jsonResponse.photos.photo;
-        this.setState({
-            dataSource : DATASOURCE_MANAGER.cloneWithRows(photosJson),
-            hasPhotos: photosJson.length > 0
-        })
+        var originalDataSource = this.state.dataSource;
+        if(!originalDataSource){
+          this.setState({
+              rowData: photosJson,
+              dataSource : DATASOURCE_MANAGER.cloneWithRows(photosJson),
+              hasPhotos: photosJson.length > 0,
+              currentPage: currentPage
+          })
+        }else{
+          this.setState({
+              rowData : this.state.rowData.concat(photosJson),
+              dataSource : DATASOURCE_MANAGER.cloneWithRows(this.state.rowData.concat(photosJson)),
+              hasPhotos: photosJson.length > 0,
+              currentPage: currentPage
+          })
+        }
+
     }).catch((err) => {
         alert("Ups..Error fetching data: " + err);
     });
@@ -73,17 +90,42 @@ module.exports = React.createClass({
     },
 
     onHomePress(){
+        currentPage = 1;
         this.props.navigator.pop();
     },
 
     onAddFavoriteGeoLocationClick(){
-        try {
-            AsyncStorage.setItem('@MySuperStore:key', 'I like to save it.');
-            var value = AsyncStorage.getItem('@MySuperStore:key');
-            return;
-          } catch (error) {
-            alert("Error saving");
-        }
+
+
+        AsyncStorage.getItem("@PhotospotStore:favorites", (error, result) => {
+            var favorites = [];
+            if(result === null){
+              AsyncStorage.setItem('@PhotospotStore:favorites', "");
+            }else{
+              favorites = JSON.parse(result);
+            }
+
+            if (error) {
+                return;
+            }
+            try {
+
+              var location = {
+                latitude:this.props.navigator.navigationContext.currentRoute.currentLatitude,
+                longitude: this.props.navigator.navigationContext.currentRoute.currentLongitude
+              };
+              favorites[favorites.length] = location;
+              const stringifiedArray = JSON.stringify(favorites)
+              AsyncStorage.setItem('@PhotospotStore:favorites', stringifiedArray);
+
+              PhotospotState.FAVORITES_CHANGED = true;
+              alert("Location saved");
+            } catch (error) {
+                alert("Error saving location: " + error);
+            }
+
+        });
+
     },
 
     renderHeader(){
@@ -95,8 +137,8 @@ module.exports = React.createClass({
             <View style={{flex: 9, alignItems: PLATFORM_IOS ? 'center': 'flex-start', marginTop: PLATFORM_IOS ? 10 : 15, marginLeft: PLATFORM_IOS? -15: 15}}>
               <Text style={styles.stickySectionText}>{this.state.title}</Text>
             </View>
-            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: Platform.OS === 'ios'? 5: 0, alignItems: 'center', justifyContent:'center', height: STICKY_HEADER_HEIGHT}} onPress={(onPress) => {alert('Available soon!')}}>
-              <Icon name='heart' size={20} color="white" />
+            <TouchableOpacity style={{flex: 1, flexDirection: 'row', marginRight: 10, marginTop: Platform.OS === 'ios'? 5: 0, alignItems: 'center', justifyContent:'center', height: STICKY_HEADER_HEIGHT}} onPress={this.onAddFavoriteGeoLocationClick}>
+              <Icon name='star' size={20} color="white" />
             </TouchableOpacity>
           </View>
         )
@@ -132,6 +174,7 @@ module.exports = React.createClass({
                     <PhotoRowContent rowData={rowData}/>
                   </TouchableOpacity>
                )}
+               onEndReached={() => {this.fetchPhotos()}}
             />
           );
         }else{

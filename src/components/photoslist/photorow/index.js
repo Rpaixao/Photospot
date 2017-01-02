@@ -37,7 +37,6 @@ module.exports = React.createClass({
       }).then((response) => {
           return response.json();
       }).then((jsonResponse) => {
-          console.log(jsonResponse);
           let locationJson = jsonResponse.photo.location;
           this.setState({
               geoLocationData : {

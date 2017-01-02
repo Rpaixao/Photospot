@@ -26,7 +26,7 @@ import Dimensions from 'Dimensions';
 let windowWidth = Dimensions.get('window').width;
 let windowHeight = Dimensions.get('window').heights;
 const STICKY_HEADER_HEIGHT = Platform.OS === 'ios' ? 60 : 56; ;
-let mapHeight = Dimensions.get('window').height - STICKY_HEADER_HEIGHT - 40;
+let mapHeight = Dimensions.get('window').height - STICKY_HEADER_HEIGHT ;
 
 var LOCATION_REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
 var INFO_REQUEST_URL = 'https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=2254d4b9a1d5a438cafc2621d2f002f3&format=json&nojsoncallback=1&';
@@ -107,10 +107,9 @@ class PhotoDetail extends Component {
 
   renderGMapsImage(){
       var urlString = GMAPS_URL + "&center=" + this.state.geoLocationData.latitude + "," + this.state.geoLocationData.longitude + "&markers=color:red%7C" + this.state.geoLocationData.latitude + "," + this.state.geoLocationData.longitude;
-      console.log(urlString);
       return(
         <Image source={{uri: urlString,
-                        width: window.width-10,
+                        width: window.width,
                         height: mapHeight}}>
 
             <TouchableHighlight underlayColor='#FFF' onPress={() => {this.onPressGoToWebsiteEvent(this.onPressGoToWebsiteEvent("http://maps.google.com/maps?z=12&t=m&q=loc:" + this.state.geoLocationData.latitude + "+" + this.state.geoLocationData.longitude + ""))}} style={{alignItems: 'center', justifyContent: 'center', width: 48, height: 48, backgroundColor: 'white', borderRadius: 50, borderWidth: 1, borderColor: '#DDD', marginLeft: 10, marginTop: 10}}>
@@ -138,11 +137,7 @@ class PhotoDetail extends Component {
   renderLocationContent(){
     if(this.hasEnoughData()){
       return(
-        <View style={{borderWidth: 1, borderColor: '#DDD',  width: windowWidth-10, alignItems: 'center', marginTop: 10, marginLeft: 5}}>
-          <View style={{alignItems: 'center', marginLeft: 10, marginRight: 10, marginBottom: 10}}>
-            { this.renderGMapsImage() }
-          </View>
-        </View>
+            this.renderGMapsImage()
       );
     }else{
       return(
@@ -243,7 +238,7 @@ class PhotoDetail extends Component {
               renderStickyHeader={() => this.renderStickyHeaderContent()}
 
               renderFixedHeader={() => (
-                  <View style={{flex: 1, flexDirection: 'row'}}>
+                  <View style={{alignItems:'flex-start', flexDirection: 'row'}}>
                       <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1}]}>
                         <TouchableOpacity style={{width: 30}} onPress={(onPress) => {this.state.navigator.pop()}}>
                             <Icon name={Platform.OS !== 'ios' ? 'arrow-left' : 'chevron-left'} size={24} color="white" />
@@ -251,7 +246,7 @@ class PhotoDetail extends Component {
                       </View>
                       <View key="fixed-header-share" style={[styles.fixedSection, {flex: 20, alignItems:'flex-end', paddingRight: 20}]}>
                           <TouchableOpacity style={{width: 30}} onPress={()=>{Share.open({title: "React Native",
-                              message: "Look this place I found on Photospot App!",
+                              message: "Photospotted!",
                               url: this.state.photoInfo.url,
                               subject: "I found this spot using Photospot App!",
                               title: "I found this spot using Photospot App!" })}}>
@@ -266,7 +261,7 @@ class PhotoDetail extends Component {
                   </View>
               )}>
 
-              {this.renderLocationContent()}
+                {this.renderLocationContent()}
 
               </ParallaxScrollView>
         </View>

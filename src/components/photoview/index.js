@@ -26,7 +26,7 @@ var PhotoFullScreenView = React.createClass({
     render() {
         return(
             <View style={{flex: 1, backgroundColor: 'black'}}>
-                <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1, alignItems:'flex-end'}]}>
+                <View key="fixed-header-back" style={[styles.fixedSection, {flex: 1, alignItems:'flex-start'}]}>
                     <TouchableOpacity style={{width: 30}} onPress={(onPress) => {this.props.navigator.pop()}}>
                         <Icon name="times" size={32} color="white" />
                     </TouchableOpacity>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
                 bottom: -40
             },
         }),
-        right: 15
+        right: -10
     },
 });
 
