@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View} from 'react-native';
+import { StyleSheet, View, ActivityIndicator} from 'react-native';
 import { Text, Button} from 'native-base';
 
 import MapView from 'react-native-maps';
@@ -9,16 +9,24 @@ import { connect } from 'react-redux';
 class MapScreen extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Map'
+        title: 'Choose the spot'
     });
 
-    state = {
-        region: {
-            latitude: 38.666707,
-            longitude: -9.0377,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        }
+    componentWillMount(){
+         this.props.setCurrentLocation(null, null, (response) => {
+            if(response.lat && response.long){
+                this.setState({
+                   region: {
+                       latitude: response.lat,
+                       longitude: response.long,
+                       latitudeDelta: 0.0922,
+                       longitudeDelta: 0.0421,
+                   }
+                });
+            } else{
+                alert("GPS not available. Please choose the location on map");
+            }
+         });
     }
 
     onRegionChange = this.onRegionChange.bind(this);
@@ -30,17 +38,17 @@ class MapScreen extends Component {
 
     render() {
 
-        let latitude = this.props.latitude ? this.props.latitude : 38.666707;
-        let longitude = this.props.longitude ? this.props.longitude : -9.0377;
+        if(this.state){
 
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
                 <MapView
                     style={styles.map}
                     onRegionChange={this.onRegionChange}
                     initialRegion={{
-                        latitude: latitude,
-                        longitude: longitude,
+                        latitude: this.state.region.latitude,
+                        longitude: this.state.region.longitude,
                         latitudeDelta: 0.3922,
                         longitudeDelta: 0.3421,
                     }}
@@ -54,12 +62,17 @@ class MapScreen extends Component {
                             alert("Error :( try again");
                         }
                     });
-                    this.props.navigation.goBack();
+                    navigate('CardsScreen')
                 }}>
                     <Text>Save</Text>
                 </Button>
             </View>
         );
+        } else {
+            return (
+                <ActivityIndicator style={{flex: 1}} size="large"></ActivityIndicator>
+            )
+        }
     }
 }
 

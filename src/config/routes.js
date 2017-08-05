@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 const Routes = {
-    Home: { screen:  CardsScreen},
+    Home: { screen:  MapScreen},
     HomeScreen: { screen: HomeScreen },
     CardsScreen: { screen: CardsScreen },
     LoginScreen: { screen: LoginScreen },

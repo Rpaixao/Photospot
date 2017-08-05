@@ -23,10 +23,7 @@ class CardsScreen extends React.Component {
         headerStyle: {
             flexDirection: 'row'
         },
-        headerRight: <TouchableOpacity style={styles.headerRightButton} onPress={() => navigation.navigate('LoginScreen')}>
-            <IconIonic name={'ios-heart-outline'} size={30} color='#1258e5'/>
-        </TouchableOpacity>,
-        headerLeft: <TouchableOpacity style={styles.headerLeftButton} onPress={() => navigation.navigate('SettingsScreen')}>
+        headerRight: <TouchableOpacity style={styles.headerRightButton} onPress={() => navigation.navigate('SettingsScreen')}>
             <IconIonic name={'ios-cog'} size={30} color='#1258e5'/>
         </TouchableOpacity>
     });
@@ -38,14 +35,14 @@ class CardsScreen extends React.Component {
     }
 
     componentWillMount(){
-        this.props.setCurrentLocation(null, null, (response) => {
+       /* this.props.setCurrentLocation(null, null, (response) => {
             if(response.lat && response.lat){
                 this.props.getCards("", response.lat, response.long);
             } else{
                 alert("GPS not available. Please choose the location on map");
                 this.props.navigation.navigate('MapScreen');
             }
-        });
+        }); */
     }
 
     onPressShowMeDirections(urlString){

@@ -20,9 +20,9 @@ class FilterSettingsScreen extends Component {
                                 <Icon name="arrow-forward" />
                             </Right>
                         </CardItem>
-                        <CardItem button onPress={() => this.props.navigation.navigate('MapScreen')}>
+                        <CardItem button onPress={() => alert("Not implemented")}>
                             <Icon active name="ios-locate-outline" />
-                            <Text>Location</Text>
+                            <Text>Radius</Text>
                             <Right>
                                 <Icon name="arrow-forward" />
                             </Right>

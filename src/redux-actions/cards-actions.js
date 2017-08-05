@@ -48,7 +48,7 @@ export function setFilters(filters){
 };
 
 export function setCurrentLocation(latitude, longitude, onFinishCallback){
-    if(latitude && longitude){
+    if(latitude || longitude){
         return function (dispatch) {
             dispatch(setCurrentLocationHandleResponse(latitude, longitude));
             onFinishCallback && onFinishCallback(setCurrentLocationHandleResponse(latitude, longitude));
