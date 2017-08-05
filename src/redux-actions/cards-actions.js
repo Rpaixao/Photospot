@@ -24,6 +24,9 @@ export function getCards (filters = null, lat = 0, long = 0) {
     return function (dispatch) {
         ApiRestService.fetchPhotos(lat, long, filterString, 10)
             .then((serverResponse) => {
+                if(serverResponse.length === 0){
+                  alert("No Results :( Try a different Location");
+                }
                 dispatch(getCardsHandleResponse(serverResponse.length, serverResponse));
             })
             .catch((errorObject) => {

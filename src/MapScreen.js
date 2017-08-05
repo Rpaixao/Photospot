@@ -56,7 +56,7 @@ class MapScreen extends Component {
                 <Button full success onPress={() => {
                     this.props.setCurrentLocation(this.state.region.latitude, this.state.region.longitude, (response) => {
                         if(response.lat && response.lat){
-                            this.props.getCards("", response.lat, response.long);
+                            this.props.getCards(this.props.filters, response.lat, response.long);
                             this.props.resetCards();
                         } else{
                             alert("Error :( try again");
