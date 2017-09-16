@@ -13,6 +13,7 @@ class MapScreen extends Component {
     });
 
     componentWillMount(){
+         setTimeout(()=>this.setState({statusBarHeight: 1}),500);
          this.props.setCurrentLocation(null, null, (response) => {
             if(response.lat && response.long){
                 this.setState({
@@ -24,16 +25,28 @@ class MapScreen extends Component {
                    }
                 });
             } else{
-                alert("GPS not available. Please choose the location on map");
+                alert("GPS not available. Please choose any location on map");
+                this.props.setCurrentLocation(47.516231, 14.550072, (response) => {
+                    this.setState({
+                        region: {
+                            latitude: response.lat,
+                            longitude: response.long,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }
+                    });
+                });
             }
          });
     }
 
     onRegionChange = this.onRegionChange.bind(this);
-    onRegionChange(region) {
-        this.setState({
-            region
-        });
+    onRegionChange(region = undefined) {
+        if(region){
+            this.setState({
+                region
+            });
+        }
     }
 
     render() {
@@ -42,30 +55,33 @@ class MapScreen extends Component {
 
         const { navigate } = this.props.navigation;
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {paddingTop: this.state.statusBarHeight}]}>
                 <MapView
                     style={styles.map}
+
                     onRegionChange={this.onRegionChange}
                     initialRegion={{
                         latitude: this.state.region.latitude,
                         longitude: this.state.region.longitude,
-                        latitudeDelta: 0.3922,
-                        longitudeDelta: 0.3421,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
                     }}
                 />
-                <Button full success onPress={() => {
-                    this.props.setCurrentLocation(this.state.region.latitude, this.state.region.longitude, (response) => {
-                        if(response.lat && response.lat){
-                            this.props.getCards(this.props.filters, response.lat, response.long);
-                            this.props.resetCards();
-                        } else{
-                            alert("Error :( try again");
-                        }
-                    });
-                    navigate('CardsScreen')
-                }}>
-                    <Text>Save</Text>
-                </Button>
+                <View style={{paddingBottom: 10}}>
+                    <Button rounded success onPress={() => {
+                        this.props.setCurrentLocation(this.state.region.latitude, this.state.region.longitude, (response) => {
+                            if(response.lat && response.lat){
+                                this.props.getCards(this.props.filters, response.lat, response.long);
+                                this.props.resetCards();
+                            } else{
+                                alert("Error :( try again");
+                            }
+                        });
+                        navigate('CardsScreen')
+                    }}>
+                        <Text>Go!</Text>
+                    </Button>
+                </View>
             </View>
         );
         } else {

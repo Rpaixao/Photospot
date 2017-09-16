@@ -12,7 +12,7 @@ export const SET_LOCATION = 'SET_LOCATION';
 
 export function resetCards () {
     return function (dispatch) {
-        dispatch(getCardsHandleResponse(0, []));
+        dispatch(getCardsHandleResponse(-1, []));
     }
 }
 
@@ -24,14 +24,11 @@ export function getCards (filters = null, lat = 0, long = 0) {
     return function (dispatch) {
         ApiRestService.fetchPhotos(lat, long, filterString, 10)
             .then((serverResponse) => {
-                if(serverResponse.length === 0){
-                  alert("No Results :( Try a different Location");
-                }
                 dispatch(getCardsHandleResponse(serverResponse.length, serverResponse));
             })
             .catch((errorObject) => {
                 Alert.alert(
-                    'Ocorreu um erro na Consulta',
+                    'Oh, there is a problem. Please try again',
                     errorObject,
                     [ {text: 'Ok'} ]
                 );
@@ -75,7 +72,7 @@ export function setCurrentLocation(latitude, longitude, onFinishCallback){
     }
 };
 
-export function getCardsHandleResponse (totalCards = 0, cards = []) {
+export function getCardsHandleResponse (totalCards = -1, cards = []) {
     return {
         type: GET_CARDS,
         totalCards,

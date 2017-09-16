@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import IconIonic from 'react-native-vector-icons/Ionicons';
-import { Text, View, Container, Button, Icon, DeckSwiper, Card, CardItem, Left, Right, Toast, Body, Picker, Item } from 'native-base';
+import { Text, View, Container, Button, Icon, DeckSwiper, Card, CardItem, Left, Right, H1, Body} from 'native-base';
 
 import { connect } from 'react-redux';
 
@@ -28,23 +28,6 @@ class CardsScreen extends React.Component {
         </TouchableOpacity>
     });
 
-    state = {
-        selected: 'key1',
-        filter: 'photo',
-        cards: []
-    }
-
-    componentWillMount(){
-       /* this.props.setCurrentLocation(null, null, (response) => {
-            if(response.lat && response.lat){
-                this.props.getCards("", response.lat, response.long);
-            } else{
-                alert("GPS not available. Please choose the location on map");
-                this.props.navigation.navigate('MapScreen');
-            }
-        }); */
-    }
-
     onPressShowMeDirections(urlString){
         urlString += "";
         Linking.canOpenURL(urlString).then(supported => {
@@ -57,8 +40,11 @@ class CardsScreen extends React.Component {
     }
 
     render() {
-
-        if(this.props.cards.length > 0){
+        if(this.props.totalCards === -1){
+            return(
+                <ActivityIndicator style={{flex: 1}} size="large"></ActivityIndicator>
+            );
+        } else if(this.props.totalCards > 0){
             return (
                 <Container>
                     <View padder >
@@ -94,7 +80,11 @@ class CardsScreen extends React.Component {
             );
         }else {
             return(
-                <ActivityIndicator style={{flex: 1}} size="large"></ActivityIndicator>
+                <Container>
+                    <View padder>
+                        <H1 style={{color: '#555', textAlign: 'center'}}>No results, please try a differnt location.</H1>
+                    </View>
+                </Container>
             );
         }
 
@@ -121,6 +111,7 @@ import { getCards, setCurrentLocation } from './redux-actions';
 function select (store) {
     return {
         cards: store.cardsReducer.get('cards'),
+        totalCards: store.cardsReducer.get('totalCards'),
         nav: store.navRecucer
     };
 }
