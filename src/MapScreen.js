@@ -13,20 +13,31 @@ class MapScreen extends Component {
     });
 
     componentWillMount(){
-        this.props.setCurrentLocation(null, null, (response) => {
+         setTimeout(()=>this.setState({statusBarHeight: 1}),500);
+         this.props.setCurrentLocation(null, null, (response) => {
             if(response.lat && response.long){
                 this.setState({
-                    region: {
-                        latitude: response.lat,
-                        longitude: response.long,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }
+                   region: {
+                       latitude: response.lat,
+                       longitude: response.long,
+                       latitudeDelta: 0.0922,
+                       longitudeDelta: 0.0421,
+                   }
                 });
             } else{
-                alert("GPS not available. Please choose the location on map");
+                alert("GPS not available. Please choose any location on map");
+                this.props.setCurrentLocation(47.516231, 14.550072, (response) => {
+                    this.setState({
+                        region: {
+                            latitude: response.lat,
+                            longitude: response.long,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }
+                    });
+                });
             }
-        });
+         });
     }
 
     onRegionChange = this.onRegionChange.bind(this);
@@ -38,9 +49,13 @@ class MapScreen extends Component {
         }
     }
 
+    isMapDataRenderingAvailable() {
+        return this.state && this.state.region && this.state.region.latitude && this.state.region.longitude;
+    }
+
     render() {
 
-        if(this.state){
+        if(this.isMapDataRenderingAvailable()){
 
         const { navigate } = this.props.navigation;
         return (
