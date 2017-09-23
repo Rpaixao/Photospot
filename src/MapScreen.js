@@ -13,31 +13,20 @@ class MapScreen extends Component {
     });
 
     componentWillMount(){
-         setTimeout(()=>this.setState({statusBarHeight: 1}),500);
-         this.props.setCurrentLocation(null, null, (response) => {
+        this.props.setCurrentLocation(null, null, (response) => {
             if(response.lat && response.long){
                 this.setState({
-                   region: {
-                       latitude: response.lat,
-                       longitude: response.long,
-                       latitudeDelta: 0.0922,
-                       longitudeDelta: 0.0421,
-                   }
+                    region: {
+                        latitude: response.lat,
+                        longitude: response.long,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }
                 });
             } else{
-                alert("GPS not available. Please choose any location on map");
-                this.props.setCurrentLocation(47.516231, 14.550072, (response) => {
-                    this.setState({
-                        region: {
-                            latitude: response.lat,
-                            longitude: response.long,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        }
-                    });
-                });
+                alert("GPS not available. Please choose the location on map");
             }
-         });
+        });
     }
 
     onRegionChange = this.onRegionChange.bind(this);
