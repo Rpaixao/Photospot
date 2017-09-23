@@ -57,37 +57,37 @@ class MapScreen extends Component {
 
         if(this.isMapDataRenderingAvailable()){
 
-        const { navigate } = this.props.navigation;
-        return (
-            <View style={[styles.container, {paddingTop: this.state.statusBarHeight}]}>
-                <MapView
-                    style={styles.map}
+            const { navigate } = this.props.navigation;
+            return (
+                <View style={[styles.container, {paddingTop: this.state.statusBarHeight}]}>
+                    <MapView
+                        style={styles.map}
 
-                    onRegionChange={this.onRegionChange}
-                    initialRegion={{
-                        latitude: this.state.region.latitude,
-                        longitude: this.state.region.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-                />
-                <View style={{paddingBottom: 10}}>
-                    <Button rounded success onPress={() => {
-                        this.props.setCurrentLocation(this.state.region.latitude, this.state.region.longitude, (response) => {
-                            if(response.lat && response.lat){
-                                this.props.getCards(this.props.filters, response.lat, response.long);
-                                this.props.resetCards();
-                            } else{
-                                alert("Error :( try again");
-                            }
-                        });
-                        navigate('CardsScreen')
-                    }}>
-                        <Text>Go!</Text>
-                    </Button>
+                        onRegionChange={this.onRegionChange}
+                        initialRegion={{
+                            latitude: this.state.region.latitude,
+                            longitude: this.state.region.longitude,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }}
+                    />
+                    <View style={{paddingBottom: 10}}>
+                        <Button rounded success onPress={() => {
+                            this.props.setCurrentLocation(this.state.region.latitude, this.state.region.longitude, (response) => {
+                                if(response.lat && response.lat){
+                                    this.props.getCards(this.props.filters, response.lat, response.long);
+                                    this.props.resetCards();
+                                } else{
+                                    alert("Error :( try again");
+                                }
+                            });
+                            navigate('CardsScreen')
+                        }}>
+                            <Text>Go!</Text>
+                        </Button>
+                    </View>
                 </View>
-            </View>
-        );
+            );
         } else {
             return (
                 <ActivityIndicator style={{flex: 1}} size="large"></ActivityIndicator>

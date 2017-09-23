@@ -1,20 +1,18 @@
 import React from 'react';
+
 import {
     StyleSheet,
     Dimensions,
-    Button as ReactButton,
     ActivityIndicator,
-    Image,
     TouchableOpacity,
-    Linking
+    Linking,
+    ListView
 } from 'react-native';
-
 import IconIonic from 'react-native-vector-icons/Ionicons';
-import { Text, View, Container, Button, Icon, DeckSwiper, Card, CardItem, Left, Right, H1, Body} from 'native-base';
-
+import { View, Container, H1 } from 'native-base';
 import { connect } from 'react-redux';
 
-const window = Dimensions.get('window');
+import PhotospotCard from './components/PhotospotCard'
 
 class CardsScreen extends React.Component {
 
@@ -28,55 +26,28 @@ class CardsScreen extends React.Component {
         </TouchableOpacity>
     });
 
-    onPressShowMeDirections(urlString){
-        urlString += "";
-        Linking.canOpenURL(urlString).then(supported => {
-            if (!supported) {
-                console.log('Can\'t handle url: ');
-            } else {
-                return Linking.openURL(urlString);
-            }
-        });
-    }
-
     render() {
         if(this.props.totalCards === -1){
             return(
                 <ActivityIndicator style={{flex: 1}} size="large"></ActivityIndicator>
             );
         } else if(this.props.totalCards > 0){
+            const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+            this.state = {
+                dataSource: ds.cloneWithRows(this.props.cards),
+            };
+
             return (
-                <Container>
-                    <View padder >
-                        <DeckSwiper dataSource={this.props.cards}
-                                    renderItem={(item)=>
-                                        <Card style={{flex: 1}}>
-                                            <CardItem>
-                                                <Left>
-                                                    <Body>
-                                                    <Text>{item.locality}</Text>
-                                                    <Text note>{item.county}, {item.region}</Text>
-                                                    <Text note>{item.views} views</Text>
-                                                    </Body>
-                                                </Left>
-                                                <Right>
-                                                    <Button transparent onPress={() => this.props.navigation.navigate('LoginScreen')}>
-                                                        <Icon name="ios-heart-outline" style={{fontSize: 45, color: 'red'}}/>
-                                                    </Button>
-                                                </Right>
-                                            </CardItem>
-                                            <CardItem cardBody>
-                                                <Image source={{uri: item.image}} style={{height: window.height/1.6, width: null, flex: 1}}/>
-                                            </CardItem>
-                                            <Button full success onPress={() => this.onPressShowMeDirections(item.mapsURL)}>
-                                                <Icon name="ios-navigate" style={{fontSize: 30, color: 'white'}}/>
-                                                <Text>Show me directions !</Text>
-                                            </Button>
-                                        </Card>
-                                    }>
-                        </DeckSwiper>
-                    </View>
-                </Container>
+                <ListView
+                        ref="CardsListView"
+                        dataSource={this.state.dataSource}
+                        renderRow={(item)=>
+                            <View padder>
+                                <PhotospotCard photoObject={item} navigation={this.props.navigation} />
+                            </View>
+                        }>
+                </ListView>
             );
         }else {
             return(
