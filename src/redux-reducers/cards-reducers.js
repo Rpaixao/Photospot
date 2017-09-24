@@ -18,6 +18,14 @@ export default function cardsReducer (state = initialState, action = {}) {
         });
     }
 
+    if (action.type === ActionTypes.GET_MORE_CARDS) {
+
+        return state.withMutations((stateCtx) => {
+            stateCtx.set('totalCards', action.totalCards);
+            stateCtx.set('cards',  stateCtx.get('cards').concat(action.cards));
+        });
+    }
+
     if (action.type === ActionTypes.SET_FILTERS) {
         return state.withMutations((stateCtx) => {
             stateCtx.set('filters', action.filters);

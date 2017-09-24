@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 export const GET_CARDS = 'GET_CARDS';
+export const GET_MORE_CARDS = 'GET_MORE_CARDS';
 export const SET_FILTERS = 'SET_FILTERS';
 export const SET_LOCATION = 'SET_LOCATION';
 
@@ -17,14 +18,19 @@ export function resetCards () {
 }
 
 
-export function getCards (filters = null, lat = 0, long = 0) {
+export function getCards (filters = null, lat = 0, long = 0, currentPage = 1) {
 
     let filterString = filters ? PhotospotState.getFiltersString(filters) : "";
 
     return function (dispatch) {
-        ApiRestService.fetchPhotos(lat, long, filterString, 10)
+        ApiRestService.fetchPhotos(lat, long, filterString, 10, currentPage)
             .then((serverResponse) => {
-                dispatch(getCardsHandleResponse(serverResponse.length, serverResponse));
+                if(currentPage == 1){
+                    dispatch(getCardsHandleResponse(serverResponse.length, serverResponse));
+                }else {
+                    dispatch(getMoreCardsHandleResponse(serverResponse.length, serverResponse));
+                }
+
             })
             .catch((errorObject) => {
                 Alert.alert(
@@ -75,6 +81,14 @@ export function setCurrentLocation(latitude, longitude, onFinishCallback){
 export function getCardsHandleResponse (totalCards = -1, cards = []) {
     return {
         type: GET_CARDS,
+        totalCards,
+        cards
+    };
+}
+
+export function getMoreCardsHandleResponse (totalCards = -1, cards = []) {
+    return {
+        type: GET_MORE_CARDS,
         totalCards,
         cards
     };

@@ -1,14 +1,15 @@
 
 module.exports = {
-    fetchPhotos(lat, lng, filter, currentRadius){
+    fetchPhotos(lat, lng, filter, currentRadius, currentPage = 1){
+        alert(currentPage);
 
         let REQUEST_BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&&extras=views&page=";
 
         var radius = currentRadius;
         var latitude = lat;
         var longitude = lng;
-        var currentPage = 1;
-        var urlString = REQUEST_BASE_URL + currentPage + '&lat=' + latitude + '&lon=' + longitude + '&radius=' + radius + '&sort=interestingness-desc&per_page=40&tags=' + filter;
+        var urlString = REQUEST_BASE_URL + currentPage + '&lat=' + latitude + '&lon=' + longitude + '&radius=' + radius + '&sort=interestingness-desc&per_page=10&tags=' + filter;
+
 
         return fetch(urlString, {
             method: 'get'

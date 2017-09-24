@@ -26,7 +26,20 @@ class CardsScreen extends React.Component {
         </TouchableOpacity>
     });
 
+    onEndReached = this.onEndReached.bind(this);
+    onEndReached() {
+
+        let nextPage = this.state.currentPage + 1;
+
+        this.props.getCards(this.props.filters, this.props.latitude, this.props.longitude, nextPage);
+
+        this.state = {
+            currentPage: this.state.currentPage + 1
+        };
+    }
+
     render() {
+
         if(this.props.totalCards === -1){
             return(
                 <ActivityIndicator style={{flex: 1}} size="large"></ActivityIndicator>
@@ -36,12 +49,17 @@ class CardsScreen extends React.Component {
 
             this.state = {
                 dataSource: ds.cloneWithRows(this.props.cards),
+                currentPage: 1
             };
 
             return (
                 <ListView
                         ref="CardsListView"
                         dataSource={this.state.dataSource}
+                        onEndReached={() => {
+                                this.onEndReached();
+                            }
+                        }
                         renderRow={(item)=>
                             <View padder>
                                 <PhotospotCard photoObject={item} navigation={this.props.navigation} />
@@ -83,13 +101,15 @@ function select (store) {
     return {
         cards: store.cardsReducer.get('cards'),
         totalCards: store.cardsReducer.get('totalCards'),
-        nav: store.navRecucer
+        nav: store.navRecucer,
+        latitude: store.cardsReducer.get('latitude'),
+        longitude: store.cardsReducer.get('longitude')
     };
 }
 
 function actions (dispatch) {
     return {
-        getCards: (filters, lat, long) => dispatch(getCards(filters, lat, long)),
+        getCards: (filters, lat, long, currentPage) => dispatch(getCards(filters, lat, long, currentPage)),
         setCurrentLocation: (lat, long, onFinishCallback) => dispatch(setCurrentLocation(lat, long, onFinishCallback))
     };
 }
