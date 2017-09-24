@@ -1,7 +1,6 @@
 
 module.exports = {
     fetchPhotos(lat, lng, filter, currentRadius, currentPage = 1){
-        alert(currentPage);
 
         let REQUEST_BASE_URL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2254d4b9a1d5a438cafc2621d2f002f3&privacy_filter=1&has_geo=1&format=json&nojsoncallback=1&&extras=views&page=";
 
