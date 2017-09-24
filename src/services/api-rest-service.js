@@ -15,7 +15,7 @@ module.exports = {
         }).then((response) => {
             return response.json();
         }).then((jsonResponse) => {
-            return jsonResponse.photos.photo;
+            return jsonResponse.photos.photo.sort(function(a, b) {return b.views - a.views})
         }).catch((err) => {
             alert("Ups..Error fetching data :( " + err);
             console.log("Ups..Error fetching data :( : " + err);
