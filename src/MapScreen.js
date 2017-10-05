@@ -3,13 +3,16 @@ import { StyleSheet, View, ActivityIndicator} from 'react-native';
 import { Text, Button} from 'native-base';
 
 import MapView from 'react-native-maps';
+import SearchFilter from './components/SearchFilter';
 
 import { connect } from 'react-redux';
 
 class MapScreen extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: 'Choose the spot'
+        header: (
+            <SearchFilter/>
+        )
     });
 
     componentWillMount(){

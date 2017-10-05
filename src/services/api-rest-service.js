@@ -39,6 +39,32 @@ module.exports = {
         }).catch((err) => {
             console.log('why!! -' + err)
         });
+    },
+
+    fetchSearchHints(){
+          return [...this.fetchFlickrFilters(),...this.fetchGooglePlaces()];
+    },
+
+    fetchFlickrFilters(){
+        return [
+            {type: 'filter', hint: 'Trees'},
+            {type: 'filter', hint: 'Landscapes'},
+            {type: 'filter', hint: 'Cities'},
+            {type: 'filter', hint: 'Animals'},
+            {type: 'filter', hint: 'Cars'},
+        ];
+    },
+
+    fetchGooglePlaces(){
+        return [
+            {type: 'place', hint: 'Lisbon'},
+            {type: 'place', hint: 'Porto'},
+            {type: 'place', hint: 'Braga'},
+            {type: 'place', hint: 'Porto Côvo'},
+            {type: 'place', hint: 'Algarve'},
+        ];
     }
+
+
 
 };

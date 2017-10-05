@@ -23,7 +23,7 @@ export default class App extends React.Component {
         headerStyle: {
             flexDirection: 'row'
         },
-        headerRight: <TouchableOpacity style={styles.headerRightButton} onPress={() => navigation.navigate('FilterSettingsScreen')}>
+        headerRight: <TouchableOpacity style={styles.headerRightButton} onPress={() => navigation.navigate('SearchFilter')}>
             <IconIonic name={'ios-color-filter-outline'} size={30} color='#1258e5'/>
         </TouchableOpacity>,
         headerLeft: <TouchableOpacity style={styles.headerLeftButton} onPress={() => navigation.navigate('LoginScreen')}>
