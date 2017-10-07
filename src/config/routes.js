@@ -1,4 +1,5 @@
-import HomeScreen from '../HomeScreen'
+import HomeScreen from '../HomeScreen';
+import HelloScreen from '../HelloScreen';
 import CardsScreen from '../CardsScreen';
 import LoginScreen from '../LoginScreen';
 import FilterSettingsScreen from '../FilterSettingsScreen';
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 
 const Routes = {
-    Home: { screen:  MapScreen},
+    Home: { screen:  HelloScreen},
     HomeScreen: { screen: HomeScreen },
     CardsScreen: { screen: CardsScreen },
     LoginScreen: { screen: LoginScreen },
