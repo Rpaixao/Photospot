@@ -41,8 +41,8 @@ class LoginScreen extends Component {
 
                     <Button onPress={() => {
                             facebook(secrets.facebook).then((userInfo) => {
-
-                                if(userInfo){
+                                
+                                if(!userInfo.user.error){
                                     this.props.setUserInfo(userInfo);
                                     Toast.show({
                                         text: 'Logged in with Facebook!',
