@@ -26,16 +26,24 @@ class CardsScreen extends React.Component {
         </TouchableOpacity>
     });
 
+    constructor(){
+        super();
+        this.state = {
+            currentPage: 1,
+        };
+    }
+
     onEndReached = this.onEndReached.bind(this);
     onEndReached() {
 
         let nextPage = this.state.currentPage + 1;
+        this.state = {
+            currentPage: nextPage
+        };
+
+        console.log("[D] END REACHED - Page " + nextPage);
 
         this.props.getCards(this.props.filters, this.props.latitude, this.props.longitude, nextPage);
-
-        this.state = {
-            currentPage: this.state.currentPage + 1
-        };
     }
 
     onPressAddToFavoritesButton = this.onPressAddToFavoritesButton.bind(this);
@@ -58,7 +66,7 @@ class CardsScreen extends React.Component {
 
             this.state = {
                 dataSource: ds.cloneWithRows(this.props.cards),
-                currentPage: 1
+                currentPage: this.state.currentPage
             };
 
             return (
