@@ -31,7 +31,6 @@ module.exports = {
         return fetch(requestURLWithPhotoID, {
             method: 'get'
         }).then((response) => {
-            console.log("[DEBUG] RECEBI A RESPOSTA do GEO LOCATION do " + item.id);
             return response.json();
         }).then((jsonResponse) => {
             let locationJson = jsonResponse.photo.location;

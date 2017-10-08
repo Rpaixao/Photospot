@@ -66,7 +66,7 @@ export default class PhotospotCard extends React.Component {
                         </Body>
                     </Left>
                     <Right>
-                        <Button transparent onPress={() => this.props.navigation.navigate('LoginScreen')}>
+                        <Button transparent onPress={this.props.onPressAddToFavoritesButton}>
                             <Icon name="ios-heart-outline" style={{fontSize: 45, color: 'red'}}/>
                         </Button>
                     </Right>

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, ActivityIndicator} from 'react-native';
 import { Text, Button} from 'native-base';
-
 import MapView from 'react-native-maps';
-
 import { connect } from 'react-redux';
 
 class MapScreen extends Component {

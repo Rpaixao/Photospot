@@ -12,7 +12,7 @@ import IconIonic from 'react-native-vector-icons/Ionicons';
 import { View, Container, H1 } from 'native-base';
 import { connect } from 'react-redux';
 
-import PhotospotCard from './components/PhotospotCard'
+import PhotospotCard from './components/PhotospotCard';
 
 class CardsScreen extends React.Component {
 
@@ -36,6 +36,15 @@ class CardsScreen extends React.Component {
         this.state = {
             currentPage: this.state.currentPage + 1
         };
+    }
+
+    onPressAddToFavoritesButton = this.onPressAddToFavoritesButton.bind(this);
+    onPressAddToFavoritesButton(){
+        if(this.props.userInfo && this.props.userInfo.isLoggedIn){
+            alert(this.props.userInfo.username + ", this feature is not implemented yet.");
+        } else {
+            this.props.navigation.navigate('LoginScreen');
+        }
     }
 
     render() {
@@ -62,7 +71,9 @@ class CardsScreen extends React.Component {
                         }
                         renderRow={(item)=>
                             <View padder>
-                                <PhotospotCard photoObject={item} navigation={this.props.navigation} />
+                                <PhotospotCard onPressAddToFavoritesButton={this.onPressAddToFavoritesButton}
+                                photoObject={item}
+                                navigation={this.props.navigation} />
                             </View>
                         }>
                 </ListView>
@@ -103,7 +114,8 @@ function select (store) {
         totalCards: store.cardsReducer.get('totalCards'),
         nav: store.navRecucer,
         latitude: store.cardsReducer.get('latitude'),
-        longitude: store.cardsReducer.get('longitude')
+        longitude: store.cardsReducer.get('longitude'),
+        userInfo: store.loginReducer.get('userInfo')
     };
 }
 
