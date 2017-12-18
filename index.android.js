@@ -1,23 +1,23 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import { AppRegistry } from "react-native";
+import React from 'react';
+import { Provider } from "react-redux";
+import getStore from "./src/redux-store/configureStore";
+import App from "./src/App";
+import AppReducer from './src/redux-reducers';
+import { createStore } from 'redux';
 
-import React, { Component } from 'react';
-import {
-  AppRegistry
-} from 'react-native';
 
-let PhotospotApp = require('./src/PhotospotApp');
+class Photospot extends React.Component {
 
-class Photospot extends Component {
-  render() {
+  store = getStore(AppReducer);
+
+  render () {
     return (
-      <PhotospotApp>
-      </PhotospotApp>
+        <Provider store={this.store}>
+          <App/>
+        </Provider>
     );
   }
 }
 
-AppRegistry.registerComponent('Photospot', () => Photospot);
+AppRegistry.registerComponent("Photospot", () => Photospot);
